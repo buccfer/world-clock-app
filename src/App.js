@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { Typeahead } from 'react-bootstrap-typeahead'
+import get from 'lodash.get'
 import Alert from 'react-bootstrap/Alert'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
@@ -33,7 +34,7 @@ class App extends Component {
       })
     } catch (err) {
       this.setState({
-        errorMessage: err.response.data.errorMessage,
+        errorMessage: get(err, 'response.data.errorMessage', 'Unknown error') ,
         isLoading: false
       })
     }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000', // TODO: get from env variables.
+  baseURL: process.env.REACT_APP_TIMEZONES_API_BASE_URL,
   timeout: 5000
 })
 

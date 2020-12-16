@@ -27,3 +27,6 @@ yarn-error.log*
 
 # Lint
 .eslintcache
+
+# Environment file
+.env
