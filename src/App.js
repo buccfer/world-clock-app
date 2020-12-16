@@ -1,6 +1,10 @@
 import { Component } from 'react'
 import axios from 'axios'
-import './App.css';
+import { Typeahead } from 'react-bootstrap-typeahead'
+import unionBy from 'lodash.unionby'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css'
+import './App.css'
 import TimezoneList from './components/TimezoneList'
 
 class App extends Component {
@@ -10,6 +14,7 @@ class App extends Component {
       timezones: [],
       selectedTimezones: []
     }
+    this.addSelection = this.addSelection.bind(this)
   }
 
   async componentDidMount() {
@@ -18,17 +23,31 @@ class App extends Component {
       const response = await axios.get('http://localhost:5000/timezones')
       this.setState({
         timezones: response.data.timezones,
-        selectedTimezones: response.data.timezones.slice(0, 3)
       })
     } catch (err) {
       // TODO: show error message to the user.
     }
   }
 
+  addSelection([selectedTimezone]) {
+    if (!selectedTimezone) return
+
+    this.setState((state) => ({
+      selectedTimezones: unionBy(state.selectedTimezones, [selectedTimezone], 'name')
+    }))
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
+          <Typeahead
+            id="timezone-typeahead"
+            options={this.state.timezones}
+            labelKey="name"
+            clearButton={true}
+            onChange={this.addSelection} />
+
           <TimezoneList timezones={this.state.selectedTimezones} />
         </header>
       </div>
