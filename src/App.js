@@ -1,11 +1,10 @@
 import { Component } from 'react'
-import axios from 'axios'
 import { Typeahead } from 'react-bootstrap-typeahead'
-import unionBy from 'lodash.unionby'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import './App.css'
 import TimezoneList from './components/TimezoneList'
+import * as timezonesApi from './lib/api'
 
 class App extends Component {
   constructor(props) {
@@ -20,28 +19,37 @@ class App extends Component {
 
   async componentDidMount() {
     try {
-      // TODO: move requests to the API to a lib.
-      const response = await axios.get('http://localhost:5000/timezones')
-      this.setState({
-        timezones: response.data.timezones,
-      })
+      const timezones = await timezonesApi.fetchTimezones()
+      this.setState({ timezones })
     } catch (err) {
       // TODO: show error message to the user.
     }
   }
 
-  addSelection([selectedTimezone]) {
-    if (!selectedTimezone) return
+  async addSelection([selectedTimezone]) {
+    if (!selectedTimezone || this.state.selectedTimezones.find(tz => tz.name === selectedTimezone.name)) {
+      return
+    }
 
-    this.setState((state) => ({
-      selectedTimezones: unionBy(state.selectedTimezones, [selectedTimezone], 'name')
-    }))
+    try {
+      await timezonesApi.selectTimezone(selectedTimezone.name)
+      this.setState((state) => ({
+        selectedTimezones: state.selectedTimezones.concat(selectedTimezone)
+      }))
+    } catch (err) {
+      // TODO: show error to user
+    }
   }
 
-  removeSelection(removedTimezone) {
-    this.setState((state) => ({
-      selectedTimezones: state.selectedTimezones.filter(tz => tz.name !== removedTimezone.name)
-    }))
+  async removeSelection(removedTimezone) {
+    try {
+      await timezonesApi.unselectTimezone(removedTimezone.name)
+      this.setState((state) => ({
+        selectedTimezones: state.selectedTimezones.filter(tz => tz.name !== removedTimezone.name)
+      }))
+    } catch (err) {
+      // TODO: show error 
+    }
   }
 
   render() {
