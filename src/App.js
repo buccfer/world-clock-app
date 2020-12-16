@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import Timezone from './components/Timezone'
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
         >
           Learn React
         </a>
+
+        <Timezone name="America/Buenos_Aires" localTime="11/06/2020 4:35PM" />
+
       </header>
     </div>
   );
