@@ -13,19 +13,28 @@ class App extends Component {
     this.state = {
       timezones: [],
       selectedTimezones: [],
-      errorMessage: null
+      errorMessage: null,
+      isLoading: false
     }
     this.addSelection = this.addSelection.bind(this)
     this.removeSelection = this.removeSelection.bind(this)
+    this.clearError = this.clearError.bind(this)
   }
 
   async componentDidMount() {
     try {
+      this.setState({ isLoading: true })
+
       const timezones = await timezonesApi.fetchTimezones()
-      this.setState({ timezones })
+
+      this.setState({
+        timezones,
+        isLoading: false
+      })
     } catch (err) {
       this.setState({
-        errorMessage: err.response.data.errorMessage
+        errorMessage: err.response.data.errorMessage,
+        isLoading: false
       })
     }
   }
@@ -36,35 +45,49 @@ class App extends Component {
     }
 
     try {
+      this.setState({ isLoading: true })
+
       await timezonesApi.selectTimezone(selectedTimezone.name)
+
       this.setState((state) => ({
-        selectedTimezones: state.selectedTimezones.concat(selectedTimezone)
+        selectedTimezones: state.selectedTimezones.concat(selectedTimezone),
+        isLoading: false
       }))
     } catch (err) {
       this.setState({
-        errorMessage: 'Could not add the timezone'
+        errorMessage: 'Could not add the timezone',
+        isLoading: false
       })
     }
   }
 
   async removeSelection(removedTimezone) {
     try {
+      this.setState({ isLoading: true })
+
       await timezonesApi.unselectTimezone(removedTimezone.name)
+
       this.setState((state) => ({
-        selectedTimezones: state.selectedTimezones.filter(tz => tz.name !== removedTimezone.name)
+        selectedTimezones: state.selectedTimezones.filter(tz => tz.name !== removedTimezone.name),
+        isLoading: false
       }))
     } catch (err) {
       this.setState({
-        errorMessage: 'Could not remove the timezone'
+        errorMessage: 'Could not remove the timezone',
+        isLoading: false
       })
     }
+  }
+
+  clearError() {
+    this.setState({ errorMessage: null })
   }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <Alert variant="danger" show={!!this.state.errorMessage} dismissible={true}>
+          <Alert variant="danger" show={!!this.state.errorMessage} dismissible={true} onClose={this.clearError}>
             {this.state.errorMessage}
           </Alert>
 
@@ -72,8 +95,10 @@ class App extends Component {
             id="timezone-typeahead"
             options={this.state.timezones}
             labelKey="name"
+            size="large"
             clearButton={true}
-            onChange={this.addSelection} />
+            onChange={this.addSelection}
+            isLoading={this.state.isLoading} />
 
           <TimezoneList timezones={this.state.selectedTimezones} onTimezoneRemoved={this.removeSelection} />
         </header>
