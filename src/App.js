@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { Typeahead } from 'react-bootstrap-typeahead'
+import Alert from 'react-bootstrap/Alert'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import './App.css'
@@ -11,7 +12,8 @@ class App extends Component {
     super(props)
     this.state = {
       timezones: [],
-      selectedTimezones: []
+      selectedTimezones: [],
+      errorMessage: null
     }
     this.addSelection = this.addSelection.bind(this)
     this.removeSelection = this.removeSelection.bind(this)
@@ -22,7 +24,9 @@ class App extends Component {
       const timezones = await timezonesApi.fetchTimezones()
       this.setState({ timezones })
     } catch (err) {
-      // TODO: show error message to the user.
+      this.setState({
+        errorMessage: err.response.data.errorMessage
+      })
     }
   }
 
@@ -37,7 +41,9 @@ class App extends Component {
         selectedTimezones: state.selectedTimezones.concat(selectedTimezone)
       }))
     } catch (err) {
-      // TODO: show error to user
+      this.setState({
+        errorMessage: 'Could not add the timezone'
+      })
     }
   }
 
@@ -48,7 +54,9 @@ class App extends Component {
         selectedTimezones: state.selectedTimezones.filter(tz => tz.name !== removedTimezone.name)
       }))
     } catch (err) {
-      // TODO: show error 
+      this.setState({
+        errorMessage: 'Could not remove the timezone'
+      })
     }
   }
 
@@ -56,6 +64,10 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
+          <Alert variant="danger" show={!!this.state.errorMessage} dismissible={true}>
+            {this.state.errorMessage}
+          </Alert>
+
           <Typeahead
             id="timezone-typeahead"
             options={this.state.timezones}
