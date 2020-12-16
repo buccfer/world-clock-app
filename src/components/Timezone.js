@@ -5,8 +5,8 @@ class Timezone extends Component {
   render() {
     return (
       <div className="Timezone-box">
-        <div className="Timezone-name">{this.props.name}</div>
-        <span>{this.props.localTime}</span>
+        <div className="Timezone-name">{this.props.timezone.name}</div>
+        <span>{this.props.timezone.localTime}</span>
       </div>
     )
   }
