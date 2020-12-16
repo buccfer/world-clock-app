@@ -15,6 +15,7 @@ class App extends Component {
       selectedTimezones: []
     }
     this.addSelection = this.addSelection.bind(this)
+    this.removeSelection = this.removeSelection.bind(this)
   }
 
   async componentDidMount() {
@@ -37,6 +38,12 @@ class App extends Component {
     }))
   }
 
+  removeSelection(removedTimezone) {
+    this.setState((state) => ({
+      selectedTimezones: state.selectedTimezones.filter(tz => tz.name !== removedTimezone.name)
+    }))
+  }
+
   render() {
     return (
       <div className="App">
@@ -48,7 +55,7 @@ class App extends Component {
             clearButton={true}
             onChange={this.addSelection} />
 
-          <TimezoneList timezones={this.state.selectedTimezones} />
+          <TimezoneList timezones={this.state.selectedTimezones} onTimezoneRemoved={this.removeSelection} />
         </header>
       </div>
     )
