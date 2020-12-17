@@ -1,5 +1,11 @@
 # World Clock App
 
+### Project dependencies
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
+
 ### Project setup
 
 1. Use the correct nodejs version: `nvm use`
@@ -8,5 +14,4 @@
 
 ### Scripts
 
-- Start a development server: `npm start`
-- Build for production: `npm run build`
+- Start a development server: `docker-compose up`
