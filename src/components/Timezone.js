@@ -5,7 +5,7 @@ class Timezone extends Component {
   render() {
     return (
       <div className="Timezone-box">
-        <a className="Remove" onClick={() => this.props.onTimezoneRemoved(this.props.timezone)}>x</a>
+        <span className="Remove" onClick={() => this.props.onTimezoneRemoved(this.props.timezone)}>x</span>
         <div className="Timezone-name">{this.props.timezone.name}</div>
         <span>{this.props.timezone.localTime}</span>
       </div>
