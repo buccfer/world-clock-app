@@ -86,24 +86,30 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <Alert variant="danger" show={!!this.state.errorMessage} dismissible={true} onClose={this.clearError}>
-            {this.state.errorMessage}
-          </Alert>
-
-          <Typeahead
-            id="timezone-typeahead"
-            options={this.state.timezones}
-            labelKey="name"
-            size="large"
-            placeholder="Search"
-            clearButton={true}
-            onChange={this.addSelection}
-            isLoading={this.state.isLoading} />
-
+      <div className="app-container">
+        <div className="container wrapper">
+          <div className="row bot20">
+            <div className="col-md-6 offset-md-3">
+              <Alert variant="danger" show={!!this.state.errorMessage} dismissible={true} onClose={this.clearError}>
+                {this.state.errorMessage}
+              </Alert>
+            </div>
+          </div>
+          <div className="row bot20">
+            <div className="col-md-6 offset-md-3">
+              <Typeahead
+                id="timezone-typeahead"
+                options={this.state.timezones}
+                labelKey="name"
+                size="large"
+                placeholder="Search"
+                clearButton={true}
+                onChange={this.addSelection}
+                isLoading={this.state.isLoading} />
+            </div>
+          </div>
           <TimezoneList timezones={this.state.selectedTimezones} onTimezoneRemoved={this.removeSelection} />
-        </header>
+        </div>
       </div>
     )
   }

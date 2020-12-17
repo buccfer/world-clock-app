@@ -1,8 +1,5 @@
-.App {
+.app-container {
   text-align: center;
-}
-
-.App-header {
   background-color: #fff;
   min-height: 100vh;
   display: flex;
@@ -11,4 +8,16 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: #282c34;
+}
+
+.wrapper {
+  max-width: 1024px;
+}
+
+.bot20 {
+  margin-bottom: 20px;
+}
+
+.bot10 {
+  margin-bottom: 10px;
 }
