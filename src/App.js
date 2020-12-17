@@ -20,6 +20,7 @@ class App extends Component {
     this.addSelection = this.addSelection.bind(this)
     this.removeSelection = this.removeSelection.bind(this)
     this.clearError = this.clearError.bind(this)
+    this.refreshTimezones = this.refreshTimezones.bind(this)
   }
 
   async componentDidMount() {
@@ -32,10 +33,34 @@ class App extends Component {
         timezones,
         isLoading: false
       })
+
+      this.updateInterval = setInterval(() => this.refreshTimezones(), 5e3)
     } catch (err) {
       this.setState({
         errorMessage: get(err, 'response.data.errorMessage', 'Unknown error') ,
         isLoading: false
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.updateInterval)
+  }
+
+  async refreshTimezones() {
+    try {
+      const timezones = await timezonesApi.fetchTimezones()
+
+      this.setState((state) => {
+        const selectedTimezoneNames = state.selectedTimezones.map(tz => tz.name)
+        return {
+          timezones,
+          selectedTimezones: timezones.filter(tz => selectedTimezoneNames.includes(tz.name))
+        }
+      })
+    } catch (err) {
+      this.setState({
+        errorMessage: 'Error while refreshing'
       })
     }
   }
