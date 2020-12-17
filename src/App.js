@@ -97,6 +97,7 @@ class App extends Component {
             options={this.state.timezones}
             labelKey="name"
             size="large"
+            placeholder="Search"
             clearButton={true}
             onChange={this.addSelection}
             isLoading={this.state.isLoading} />
