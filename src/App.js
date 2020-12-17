@@ -95,7 +95,7 @@ class App extends Component {
               </Alert>
             </div>
           </div>
-          <div className="row bot20">
+          <div className="row bot50">
             <div className="col-md-6 offset-md-3">
               <Typeahead
                 id="timezone-typeahead"
